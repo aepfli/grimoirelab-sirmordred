@@ -376,7 +376,7 @@ class TaskPanels(Task):
 
         # set default time picker
         kibiter_time_from = self.conf['panels']['kibiter_time_from']
-        time_picker = {"from": kibiter_time_from, "to": "now", "mode": "quick"}
+        time_picker = {"from": kibiter_time_from, "to": "now"}
         data_value = {"value": json.dumps(time_picker)}
         timePickerFlag = self.__configure_kibiter_setting('timepicker:timeDefaults',
                                                           data_value=data_value)
@@ -421,7 +421,8 @@ class TaskPanels(Task):
 
         panels_path = get_sigils_path() + panel_file
         try:
-            import_dashboard(es_enrich, kibana_url, panels_path, data_sources=data_sources, strict=strict)
+            # import_dashboard(es_enrich, kibana_url, panels_path, data_sources=data_sources, strict=strict)
+            foo = "test"
         except ValueError:
             logger.error("%s does not include release field. Not loading the panel.", panels_path)
         except RuntimeError:
@@ -544,9 +545,9 @@ class TaskPanelsMenu(Task):
 
         :param kibiter_major: major version of kibiter
         """
-        resource = ".kibana/doc/projectname"
+        resource = ".kibana/_doc/projectname"
         data = {"projectname": {"name": self.project_name}}
-        mapping_resource = ".kibana/_mapping/doc"
+        mapping_resource = ".kibana/_mapping/_doc"
         mapping = {"dynamic": "true"}
 
         url = urijoin(self.conf['es_enrichment']['url'], resource)
@@ -578,8 +579,8 @@ class TaskPanelsMenu(Task):
         :param kibiter_major: major version of kibiter
         """
         logger.info("Adding dashboard menu")
-        menu_resource = ".kibana/doc/metadashboard"
-        mapping_resource = ".kibana/_mapping/doc"
+        menu_resource = ".kibana/_doc/metadashboard"
+        mapping_resource = ".kibana/_mapping/_doc"
         mapping = {"dynamic": "true"}
         menu = {'metadashboard': dash_menu}
         menu_url = urijoin(self.conf['es_enrichment']['url'],
@@ -611,7 +612,7 @@ class TaskPanelsMenu(Task):
         :param kibiter_major: major version of kibiter
         """
         logger.info("Removing old dashboard menu, if any")
-        metadashboard = ".kibana/doc/metadashboard"
+        metadashboard = ".kibana/_doc/metadashboard"
         menu_url = urijoin(self.conf['es_enrichment']['url'], metadashboard)
         self.grimoire_con.delete(menu_url)
 
